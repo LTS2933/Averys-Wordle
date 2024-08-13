@@ -1,0 +1,86 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #121213;
+}
+
+.game-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.header {
+    font-family: 'Trebuchet MS', sans-serif;
+    font-size: 3rem;
+    color: #6aaa64;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.board {
+    display: grid;
+    grid-template-columns: repeat(5, 60px);
+    grid-gap: 5px;
+    margin-bottom: 20px;
+}
+
+.tile {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    color: white;
+    background-color: #3a3a3c;
+    border: 2px solid #3a3a3c;
+    text-transform: uppercase;
+}
+
+.tile.correct {
+    background-color: #6aaa64;
+    border-color: #6aaa64;
+}
+
+.tile.present {
+    background-color: #c9b458;
+    border-color: #c9b458;
+}
+
+.tile.absent {
+    background-color: #787c7e;
+    border-color: #787c7e;
+}
+
+.message {
+    color: white;
+    font-size: 1.2rem;
+}
+
+.restart-button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    color: white;
+    background-color: #6aaa64;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.restart-button:hover {
+    background-color: #53954a;
+}

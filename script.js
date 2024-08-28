@@ -1,38 +1,25 @@
 let maxGuesses = 6;
 let currentGuess = 0;
-let answer = '';
-let words = [];
-let adjectives = [];
+let answer = 'SEVEN'; // Always set the answer to "SEVEN"
+let lines = [];
 let board = document.getElementById('board');
 
-// Fetch words from the text file
-fetch('words.txt')
+// Fetch lines from the text file
+fetch('lines.txt')
     .then(response => response.text())
     .then(data => {
-        words = data.split('\n').map(word => word.trim().toUpperCase());
-        return fetch('adjectives.txt'); // Fetch adjectives after words are loaded
-    })
-    .then(response => response.text())
-    .then(data => {
-        adjectives = data.split('\n').map(adj => adj.trim());
-        startGame(); // Start the game once both words and adjectives are loaded
+        lines = data.split('\n').map(line => line.trim());
+        startGame(); // Start the game once lines are loaded
     })
     .catch(error => {
         console.error('Error fetching data:', error);
-        showMessage('Failed to load word list or adjectives.');
+        showMessage('Failed to load lines.');
     });
 
 function startGame() {
     currentGuess = 0;
     board.innerHTML = ''; // Clear the board content
     document.getElementById('message').innerText = '';
-
-    // 50% chance to make the answer "Avery"
-    if (Math.random() < 0.5) {
-        answer = 'AVERY';
-    } else {
-        answer = words[Math.floor(Math.random() * words.length)];
-    }
 
     for (let i = 0; i < maxGuesses; i++) {
         addRow();
@@ -53,7 +40,6 @@ function handleKeyPress(e) {
     if (currentGuess >= maxGuesses) return;
 
     const key = e.key.toUpperCase();
-    const tiles = document.querySelectorAll('.tile');
 
     if (key.length === 1 && key >= 'A' && key <= 'Z') {
         addLetter(key);
@@ -91,52 +77,23 @@ function checkGuess() {
         return;
     }
 
-    if (!words.includes(guess)) {
+    if (guess !== answer) {
         showMessage('Word not in word list.');
         return;
     }
 
     const tiles = document.querySelectorAll('.tile');
-    const answerLetterCount = {};
-    const guessLetterCount = {};
 
-    // Count the occurrences of each letter in the answer
-    for (let i = 0; i < 5; i++) {
-        const letter = answer[i];
-        answerLetterCount[letter] = (answerLetterCount[letter] || 0) + 1;
-    }
-
-    // First pass: Identify correct positions (green)
+    // Highlight the guessed word as correct
     for (let i = 0; i < 5; i++) {
         const tile = tiles[currentGuess * 5 + i];
-        const letter = guess[i];
-        if (letter === answer[i]) {
-            tile.classList.add('correct');
-            guessLetterCount[letter] = (guessLetterCount[letter] || 0) + 1;
-        }
-    }
-
-    // Second pass: Identify present letters (yellow) and absent letters (gray)
-    for (let i = 0; i < 5; i++) {
-        const tile = tiles[currentGuess * 5 + i];
-        const letter = guess[i];
-        if (!tile.classList.contains('correct')) {
-            if (answer.includes(letter) && (guessLetterCount[letter] || 0) < answerLetterCount[letter]) {
-                tile.classList.add('present');
-                guessLetterCount[letter] = (guessLetterCount[letter] || 0) + 1;
-            } else {
-                tile.classList.add('absent');
-            }
-        }
+        tile.classList.add('correct');
     }
 
     if (guess === answer) {
-        if (answer === 'AVERY') {
-            const randomAdjective = adjectives[Math.floor(Math.random() * adjectives.length)];
-            showMessage(`I love you so much Avery. You're so ${randomAdjective}, so the answer was always you.`);
-        } else {
-            showMessage('Congratulations! You guessed correctly.');
-        }
+        // Pick a random line from lines.txt
+        const randomLine = lines[Math.floor(Math.random() * lines.length)];
+        showMessage(randomLine);
         currentGuess = maxGuesses; // Stop the game
     } else {
         currentGuess++;
@@ -166,9 +123,7 @@ function restartGame() {
     startGame();
 
     document.getElementById('restart').blur();
-
     document.body.focus();
 }
 
 document.getElementById('restart').addEventListener('click', restartGame);
-
